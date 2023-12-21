@@ -122,10 +122,14 @@ class _ProductListState extends State<ProductList> {
                         side: BorderSide(color: Colors.grey.shade200),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: ListTile(
-                        leading: const Icon(Icons.numbers),
-                        title: Text(productList[index]["name"].toString()),
-                        subtitle: Text(productList[index]["price"].toString()),
+                      child: Dismissible(
+                        key: Key("index_${productList[index]["id"]}"),
+                        child: ListTile(
+                          leading: const Icon(Icons.numbers),
+                          title: Text(productList[index]["name"].toString()),
+                          subtitle:
+                              Text(productList[index]["price"].toString()),
+                        ),
                       ),
                     );
                   },
@@ -134,6 +138,11 @@ class _ProductListState extends State<ProductList> {
             ],
           ),
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => debugPrint("Add product"),
+        child: const Icon(Icons.add),
       ),
     );
   }
