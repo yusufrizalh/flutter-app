@@ -124,6 +124,45 @@ class _ProductListState extends State<ProductList> {
                       ),
                       child: Dismissible(
                         key: Key("index_${productList[index]["id"]}"),
+                        background: Container(
+                          color: Colors.red,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Icon(Icons.delete, color: Colors.white),
+                              ),
+                              Text(
+                                "Delete",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                        secondaryBackground: Container(
+                          color: Colors.blue,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                "Edit",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Icon(Icons.edit, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onDismissed: (direction) async {
+                          if (direction == DismissDirection.startToEnd) {
+                            // after delete
+                          } else if (direction == DismissDirection.endToStart) {
+                            // after edit
+                          }
+                        },
                         child: ListTile(
                           leading: const Icon(Icons.numbers),
                           title: Text(productList[index]["name"].toString()),
