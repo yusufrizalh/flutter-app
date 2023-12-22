@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/pages/dashboard/productcreate.dart';
 import '../dashboard/models/productmodel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:confirm_dialog/confirm_dialog.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({super.key});
@@ -157,11 +160,176 @@ class _ProductListState extends State<ProductList> {
                             ],
                           ),
                         ),
-                        onDismissed: (direction) async {
+                        confirmDismiss: (direction) async {
+                          Future deleteProduct(context) async {
+                            const String apiUrlDelete =
+                                "http://192.168.1.6/flutter-api/products/deleteProduct.php";
+                            await http.post(
+                              Uri.parse(apiUrlDelete),
+                              body: {
+                                "id": productList[index]["id"],
+                              },
+                            );
+                            setState(() {
+                              getProductList().then((data) {
+                                setState(() {
+                                  productList = data;
+                                });
+                              });
+                            });
+                          }
+
+                          Future showDeleteConfirm(BuildContext context) async {
+                            if (await confirm(
+                              context,
+                              title: const Text("Confirm Delete"),
+                              content: const Text("Are you sure to delete?"),
+                              textOK: const Text("Yes"),
+                              textCancel: const Text("Cancel"),
+                            )) {
+                              return deleteProduct(context);
+                            }
+                            return debugPrint("Cancel");
+                          }
+
                           if (direction == DismissDirection.startToEnd) {
-                            // after delete
+                            // proses delete
+                            return await showDeleteConfirm(context);
                           } else if (direction == DismissDirection.endToStart) {
-                            // after edit
+                            // form edit
+                            TextEditingController productNameCtrl =
+                                TextEditingController();
+                            TextEditingController productPriceCtrl =
+                                TextEditingController();
+                            TextEditingController productDescriptionCtrl =
+                                TextEditingController();
+                            setState(() {
+                              productNameCtrl.text =
+                                  productList[index]["name"].toString();
+                              productPriceCtrl.text =
+                                  productList[index]["price"].toString();
+                              productDescriptionCtrl.text =
+                                  productList[index]["description"].toString();
+                            });
+
+                            Future updateProduct(context) async {
+                              const String apiUrlUpdate =
+                                  "http://192.168.1.6/flutter-api/products/updateProduct.php";
+                              await http.post(
+                                Uri.parse(apiUrlUpdate),
+                                body: {
+                                  "id": productList[index]["id"],
+                                  "name": productNameCtrl.text,
+                                  "price": productPriceCtrl.text,
+                                  "description": productDescriptionCtrl.text,
+                                },
+                              );
+                              setState(() {
+                                getProductList().then((data) {
+                                  setState(() {
+                                    productList = data;
+                                  });
+                                });
+                              });
+                            }
+
+                            return await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(
+                                      "Edit Product with ID: ${productList[index]["id"]}"),
+                                  backgroundColor: Colors.grey.shade200,
+                                  actions: <Widget>[
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        alignment: Alignment.center,
+                                        backgroundColor: Colors.grey,
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text(
+                                        "Cancel",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        alignment: Alignment.center,
+                                        backgroundColor: Colors.blue,
+                                      ),
+                                      onPressed: () {
+                                        updateProduct(context);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(
+                                        "Update",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  content: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Form(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            TextFormField(
+                                              controller: productNameCtrl,
+                                              keyboardType: TextInputType.text,
+                                              decoration: const InputDecoration(
+                                                  labelText:
+                                                      "Enter product name"),
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black87),
+                                            ),
+                                            const Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 16)),
+                                            TextFormField(
+                                              controller: productPriceCtrl,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                  labelText:
+                                                      "Enter product price"),
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black87),
+                                            ),
+                                            const Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 16)),
+                                            TextFormField(
+                                              controller:
+                                                  productDescriptionCtrl,
+                                              keyboardType: TextInputType.text,
+                                              decoration: const InputDecoration(
+                                                  labelText:
+                                                      "Enter product description"),
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black87),
+                                            ),
+                                            const Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 16)),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
                           }
                         },
                         child: ListTile(
