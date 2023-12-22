@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/pages/dashboard/productcreate.dart';
 import '../dashboard/models/productmodel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -180,7 +181,11 @@ class _ProductListState extends State<ProductList> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => debugPrint("Add product"),
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProductCreate(),
+          ),
+        ),
         child: const Icon(Icons.add),
       ),
     );
