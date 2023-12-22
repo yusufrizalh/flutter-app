@@ -169,6 +169,56 @@ class _ProductListState extends State<ProductList> {
                           title: Text(productList[index]["name"].toString()),
                           subtitle:
                               Text(productList[index]["price"].toString()),
+                          onTap: () {
+                            debugPrint(productList[index]["name"]);
+                            // membuka detail product
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) {
+                                return Wrap(
+                                  alignment: WrapAlignment.center,
+                                  children: <Widget>[
+                                    // ignore: sized_box_for_whitespace
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              3,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            productList[index]["name"]
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            productList[index]["price"]
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          Text(
+                                            productList[index]["description"]
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                     );
