@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_app/widgets/pages/dashboard/productcreate.dart';
 import '../dashboard/models/productmodel.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +18,7 @@ class ProductList extends StatefulWidget {
 
 class _ProductListState extends State<ProductList> {
   final String apiUrl =
-      "http://192.168.1.6/flutter-api/products/getAllProducts.php";
+      "http://192.168.1.12/flutter-api/products/getAllProducts.php";
 
   List<dynamic> productList = []; // nilai awal masih kosong
   final productModel = ProductModel();
@@ -163,7 +165,7 @@ class _ProductListState extends State<ProductList> {
                         confirmDismiss: (direction) async {
                           Future deleteProduct(context) async {
                             const String apiUrlDelete =
-                                "http://192.168.1.6/flutter-api/products/deleteProduct.php";
+                                "http://192.168.1.12/flutter-api/products/deleteProduct.php";
                             await http.post(
                               Uri.parse(apiUrlDelete),
                               body: {
@@ -214,7 +216,7 @@ class _ProductListState extends State<ProductList> {
 
                             Future updateProduct(context) async {
                               const String apiUrlUpdate =
-                                  "http://192.168.1.6/flutter-api/products/updateProduct.php";
+                                  "http://192.168.1.12/flutter-api/products/updateProduct.php";
                               await http.post(
                                 Uri.parse(apiUrlUpdate),
                                 body: {
@@ -333,10 +335,22 @@ class _ProductListState extends State<ProductList> {
                           }
                         },
                         child: ListTile(
-                          leading: const Icon(Icons.numbers),
-                          title: Text(productList[index]["name"].toString()),
-                          subtitle:
-                              Text(productList[index]["price"].toString()),
+                          leading: Image(
+                            image: NetworkImage(
+                              productList[index]["image_path"],
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                          title: Text(
+                            productList[index]["name"].toString(),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          subtitle: Text(
+                            "IDR ${productList[index]["price"].toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]}.")}",
+                          ),
                           onTap: () {
                             debugPrint(productList[index]["name"]);
                             // membuka detail product
@@ -357,6 +371,17 @@ class _ProductListState extends State<ProductList> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: <Widget>[
+                                          SizedBox(
+                                            width: 60,
+                                            height: 60,
+                                            child: Image(
+                                              image: NetworkImage(
+                                                productList[index]
+                                                    ["image_path"],
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                           Text(
                                             productList[index]["name"]
                                                 .toString(),

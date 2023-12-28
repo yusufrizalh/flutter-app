@@ -33,7 +33,7 @@ class _ProductCreateState extends State<ProductCreate> {
 
   createProduct() async {
     const String apiUrl =
-        "http://192.168.1.6/flutter-api/products/createProduct.php";
+        "http://192.168.1.12/flutter-api/products/createProduct.php";
     return await http.post(
       Uri.parse(apiUrl),
       body: {

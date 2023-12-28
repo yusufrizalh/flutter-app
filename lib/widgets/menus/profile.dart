@@ -15,9 +15,15 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   bool visible = false;
+  String userName = "";
+  String userEmail = "";
+  String userPhone = "";
+  String userAddress = "";
+  String userImage = "";
+
   final TextEditingController userEmailCtrl = TextEditingController();
   final TextEditingController userPasswordCtrl = TextEditingController();
-  final String apiUrl = "http://192.168.1.6/flutter-api/users/";
+  final String apiUrl = "http://192.168.1.12/flutter-api/users/";
 
   loginCheck() async {
     setState(() {
@@ -36,11 +42,24 @@ class _ProfileState extends State<Profile> {
           prefs.setBool("login", true);
           setState(() {
             visible = false;
+            userName = respCheck["data"][0]["user_name"].toString();
+            userEmail = respCheck["data"][0]["user_email"].toString();
+            userPhone = respCheck["data"][0]["user_phone"].toString();
+            userAddress = respCheck["data"][0]["user_address"].toString();
+            userImage = respCheck["data"][0]["image_path"].toString();
           });
+          // debugPrint("USER_IMAGE: $userImage");
+
           // arahkan ke halaman dashboard
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => const Dashboard(),
+              builder: (context) => Dashboard(
+                userName: userName,
+                userEmail: userEmail,
+                userPhone: userPhone,
+                userAddress: userAddress,
+                userImage: userImage,
+              ),
             ),
           );
         } else {
@@ -107,8 +126,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 6)),
                     TextField(
-                      controller: userEmailCtrl
-                        ..text = "yusufrizalh@example.com",
+                      controller: userEmailCtrl,
                       decoration: InputDecoration(
                         hintText: "Please enter your email address",
                         border: InputBorder.none,
