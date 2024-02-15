@@ -72,7 +72,6 @@ class _HomeState extends State<Home> {
 
   // drawer menu yang pertama kali dibuka
   int selectedDrawerIndex = 0;
-
   // menu - menu dalam drawer
   static const List<Widget> widgetDrawerMenu = <Widget>[
     Expanded(child: MyFiles()),

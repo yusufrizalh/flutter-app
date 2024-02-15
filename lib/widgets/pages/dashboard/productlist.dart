@@ -330,6 +330,7 @@ class _ProductListState extends State<ProductList> {
                               },
                             );
                           }
+                          return true;
                         },
                         child: ListTile(
                           leading: Image(

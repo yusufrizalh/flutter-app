@@ -24,7 +24,7 @@ class _ProfileState extends State<Profile> {
 
   final TextEditingController userEmailCtrl = TextEditingController();
   final TextEditingController userPasswordCtrl = TextEditingController();
-  final String apiUrl = "http://192.168.1.12/flutter-api/users/";
+  final String apiUrl = "http://192.168.1.10/flutter-api/users/";
 
   loginCheck() async {
     setState(() {

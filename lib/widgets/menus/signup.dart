@@ -30,9 +30,8 @@ class _SignupState extends State<Signup> {
   final ImagePicker picker = ImagePicker();
 
   Future signupUser(ImageSource media) async {
-    const String apiUrl = "http://192.168.1.12/flutter-api/users/signup.php";
+    const String apiUrl = "http://192.168.1.10/flutter-api/users/signup.php";
     var img = await picker.pickImage(source: media);
-
     var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
 
     if (img != null) {
